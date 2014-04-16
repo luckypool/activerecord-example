@@ -1,6 +1,7 @@
 # coding: utf-8
 require "./models/user"
 require "ap"
+require "pry"
 
 ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
@@ -8,31 +9,40 @@ ActiveRecord::Base.establish_connection(
 )
 ActiveRecord::Base.logger = Logger.new("db/database.log")
 
-puts ".create"
-name = "Foo Bar"
-created = User.create(name: name)
-ap created.attributes
+def create
+  puts ".create"
+  created = User.create(name: "Foo Bar")
+  ap created.attributes
+  created
+end
 
-gets
+def read id
+  puts ".where"
+  user = User.where(id: id).first
+  ap user.attributes
+  user
+end
 
-# read
-puts ".where"
-user = User.where(id: created.id).first
-ap user.attributes
+def update id
+  user = User.where(id: id).first
+  user.update(name: "HogePiyo")
+  new_user = User.where(id: id).first
+  ap new_user.attributes
+end
 
-gets
+def delete id
+  new_user = User.where(id: id).first
+  new_user.destroy
+end
 
-# update
-puts ".update"
-new_name = "Hoge Piyo"
-user.update(name: new_name)
-new_user = User.where(id: created.id).first
-ap new_user.attributes
+def main
+  created = create()
+  user = read(created.id)
+  update(created.id)
+  delete(created.id)
+end
 
-gets
-
-# delete
-puts ".destory"
-new_user.destroy
+binding.pry
+main()
 
 ActiveRecord::Base.connection.close

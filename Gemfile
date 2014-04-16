@@ -5,5 +5,10 @@ gem "rake"
 gem "activerecord"
 gem "sqlite3"
 gem "logger"
-gem "awesome_print"
+
+group :development do
+  gem "awesome_print"
+  gem "pry"
+  gem "pry-byebug"
+end
 
